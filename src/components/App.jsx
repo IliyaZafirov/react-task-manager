@@ -9,6 +9,19 @@ import { initialItems } from "./lib/constants";
 export default function App() {
   const [items, setItems] = useState(initialItems);
 
+  const handleAddItem = (newItemText) => {
+    const newItem = {
+      id: new Date().getTime(),
+      name: newItemText,
+      packed: false
+    };
+
+    const newItems = [...items, newItem];
+    setItems(newItems);
+  };
+
+  
+
   return (
     <>
       <BackgroundHeading />
@@ -16,7 +29,7 @@ export default function App() {
       <main>
         <Header />
         <ItemList items={items} />
-        <Sidebar setItems={setItems} />
+        <Sidebar handleAddItem={handleAddItem} />
       </main>
 
       <Footer />
