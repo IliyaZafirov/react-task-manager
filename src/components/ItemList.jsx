@@ -1,21 +1,72 @@
+import ReactSelect from "react-select";
+import EmptyView from "./EmptyView";
+import { useState } from "react";
+
+const sortingOptions = [
+  {
+    label: 'Sort by default',
+    value: 'default'
+  },
+  {
+    label: 'Sort by packed',
+    value: 'packed'
+  },
+  {
+    label: 'Sort by unpack',
+    value: 'unpacked'
+  }
+]
+
 export default function ItemList({ items, handleDeleteItem, handleToggleItem }) {
+
+  const [sortBy, setSortBy] = useState('default');
+
+  const sortedItems = [...items].sort((a, b) => {
+    if (sortBy === 'packed') {
+      return b.packed - a.packed;
+    }
+
+    if (sortBy === 'unpacked') {
+      return a.packed - b.packed;
+    }
+
+    return;
+  });
+
   return (
-    <ul>
-      {items.map(item => {
-        return <Item key={item.id} item={item} handleDeleteItem={handleDeleteItem} handleToggleItem={handleToggleItem} />;
+    <ul className="item-list">
+      {items.length === 0 && <EmptyView />}
+
+      {
+        items.length > 0 ? <section className="sorting">
+          <ReactSelect
+            onChange={(option) => setSortBy(option.value)}
+            defaultValue={sortingOptions[0]}
+            options={sortingOptions}
+          />
+        </section>
+          : null
+      }
+
+      {sortedItems.map(item => {
+        return <Item
+          key={item.id}
+          item={item}
+          onDeleteItem={handleDeleteItem}
+          onToggleItem={handleToggleItem} />;
       })}
     </ul>
   );
 }
 
-function Item({ item, handleDeleteItem, handleToggleItem }) {
+function Item({ item, onDeleteItem, onToggleItem }) {
   return (
     <li className="item">
       <label >
-        <input onChange={() => { handleToggleItem(item.id) }} checked={item.packed} type="checkbox" />
+        <input onChange={() => { onToggleItem(item.id) }} checked={item.packed} type="checkbox" />
         {item.name}
       </label>
-      <button onClick={() => { handleDeleteItem(item.id) }}>❌</button>
+      <button onClick={() => { onDeleteItem(item.id) }}>❌</button>
     </li>
   );
 }
