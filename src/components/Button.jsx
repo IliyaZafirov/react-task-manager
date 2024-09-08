@@ -1,3 +1,10 @@
-export default function Button({ type, children }) {
-    return <button className={`btn ${type == 'secondary' ? 'btn--secondary' : ''}`} > {children}</button >;
+export default function Button({ onClick, buttonType, children }) {
+    return (
+        <button
+            onClick={onClick}
+            type="submit"
+            className={`btn ${buttonType == 'secondary' ? 'btn--secondary' : ''}`}
+        >
+            {children}
+        </button >);
 }
